@@ -17,6 +17,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Firestoreのリスナー
     var listener: ListenerRegistration!
     
+    // コメント入力
+    //let ac = UIAlertController(title: "コメント", message: "メッセージを入力してください", preferredStyle: .alert)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -76,6 +79,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // いいねボタンアクション設定
         cell.likeButton.addTarget(self, action: #selector(handleButton(_:forEvent:)), for: .touchUpInside)
         
+        // コメントボタンアクション設定
+        cell.commentButton.addTarget(self, action: #selector(handleCommentButton(_:forEvent:)), for: .touchUpInside)
+        
         return cell
     }
     
@@ -103,8 +109,44 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let postRef = Firestore.firestore().collection(Const.PostPath).document(postData.id)
             postRef.updateData(["likes": updateValue])
         }
+    }
+    
+    // コメント入力ボタン押下処理
+    @objc func handleCommentButton(_ sender: UIButton, forEvent event: UIEvent) {
+        print("DEBUG_PRINT: コメント入力ボタンがタップされました")
         
+        // タップされた時の行インデックス特定
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        // CELLからデータ取り出し
+        let postData = postArray[indexPath!.row]
         
+        // ログインユーザID取得
+        let myid = Auth.auth().currentUser?.uid
+        
+        let alert = UIAlertController(title: "Title", message: "message", preferredStyle: .alert)
+        alert.addTextField(configurationHandler: { (textField:UITextField) -> Void in
+            //            textField.text = "default text."
+            textField.placeholder = "コメント入力可能です。"
+            if let comValue = postData.comments[myid!] {
+                textField.text = comValue
+            }
+        })
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) -> Void in
+            let textField = alert.textFields![0] as UITextField
+            
+            if let text = textField.text, !text.isEmpty {
+                postData.comments[myid!] = text
+            }
+            
+            print("Text field: \(String(describing: textField.text))")
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) -> Void in
+            print("Text field: cancel")
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 
 }

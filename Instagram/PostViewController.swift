@@ -20,9 +20,10 @@ class PostViewController: UIViewController {
     @IBAction func handlePostButton(_ sender: Any) {
         // 画像をJPEG形式に変換する
         let imageData = image.jpegData(compressionQuality: 0.75)
-        // 画像と投稿データの保存場所を定義する
+        // 画像と投稿データとコメントデータ保存場所を定義する
         let postRef = Firestore.firestore().collection(Const.PostPath).document()
         let imageRef = Storage.storage().reference().child(Const.ImagePath).child(postRef.documentID + ".jpg")
+        
         // HUDで投稿処理中の表示を開始
         SVProgressHUD.show()
         // Storageに画像をアップロードする
@@ -45,7 +46,6 @@ class PostViewController: UIViewController {
                 "date": FieldValue.serverTimestamp(),
                 ] as [String : Any]
             postRef.setData(postDic)
-            // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "投稿しました")
             // 投稿処理が完了したので先頭画面に戻る
            UIApplication.shared.windows.first{ $0.isKeyWindow }?.rootViewController?.dismiss(animated: true, completion: nil)

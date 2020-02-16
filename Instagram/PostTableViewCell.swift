@@ -8,20 +8,23 @@
 
 import UIKit
 import FirebaseUI
+import Firebase
 
 class PostTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var postImageView: UIImageView!    
+    @IBOutlet weak var postImageView: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var commentButton: UIButton!
+    @IBOutlet weak var commentView: UITextView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -45,7 +48,16 @@ class PostTableViewCell: UITableViewCell {
             let dateString = formatter.string(from: date)
             self.dateLabel.text = dateString
         }
-
+        
+        // コメント入力したユーザ名とコメントを全てを表示する。
+        commentView.isEditable = false
+        for dic in postData.comments {
+            
+            let comment = dic.value
+            let enterValue = postData.comments.count > 0 ? "¥n" : ""
+            commentView.text = enterValue + comment
+        }
+        
         // いいね数の表示
         let likeNumber = postData.likes.count
         likeLabel.text = "\(likeNumber)"
