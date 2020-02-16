@@ -51,11 +51,19 @@ class PostTableViewCell: UITableViewCell {
         
         // コメント入力したユーザ名とコメントを全てを表示する。
         commentView.isEditable = false
+        // コメントを初期化
+        commentView.text = nil
+        // コメントをtextViewに表示する。
+        var isFirst: Bool = true
         for dic in postData.comments {
-            
             let comment = dic.value
-            let enterValue = postData.comments.count > 0 ? "¥n" : ""
-            commentView.text = enterValue + comment
+            // ユーザ毎に改行をつける
+            let enterValue = isFirst ? "" : "\n"
+            commentView.text += enterValue + comment
+            
+            if isFirst {
+                isFirst = false
+            }
         }
         
         // いいね数の表示

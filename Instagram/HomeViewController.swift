@@ -17,9 +17,6 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Firestoreのリスナー
     var listener: ListenerRegistration!
     
-    // コメント入力
-    //let ac = UIAlertController(title: "コメント", message: "メッセージを入力してください", preferredStyle: .alert)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -125,19 +122,21 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // ログインユーザID取得
         let myid = Auth.auth().currentUser?.uid
         
-        let alert = UIAlertController(title: "Title", message: "message", preferredStyle: .alert)
+        let alert = UIAlertController(title: "コメント", message: "入力", preferredStyle: .alert)
         alert.addTextField(configurationHandler: { (textField:UITextField) -> Void in
             //            textField.text = "default text."
             textField.placeholder = "コメント入力可能です。"
-            if let comValue = postData.comments[myid!] {
-                textField.text = comValue
-            }
         })
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) -> Void in
             let textField = alert.textFields![0] as UITextField
             
+            let loginName = Auth.auth().currentUser?.displayName
+
             if let text = textField.text, !text.isEmpty {
-                postData.comments[myid!] = text
+                postData.comments[myid!] = loginName! + ":" + text
+                
+                let postRef = Firestore.firestore().collection(Const.PostPath).document(postData.id)
+                postRef.updateData(["comments": postData.comments])
             }
             
             print("Text field: \(String(describing: textField.text))")

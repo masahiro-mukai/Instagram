@@ -62,7 +62,7 @@ class LoginViewController: UIViewController {
             // アドレスとパスワードでユーザー作成。ユーザー作成に成功すると、自動的にログインする
             Auth.auth().createUser(withEmail: address, password: password) { authResult, error in
                 if let error = error {
-                    // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
+                // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
                     print("DEBUG_PRINT: " + error.localizedDescription)
                     SVProgressHUD.showError(withStatus: "ユーザー作成に失敗しました。")
                     return
@@ -97,5 +97,4 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
 }
