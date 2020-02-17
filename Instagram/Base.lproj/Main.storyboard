@@ -221,7 +221,7 @@
         <!--Login View Controller-->
         <scene sceneID="ecC-3u-L2m">
             <objects>
-                <viewController storyboardIdentifier="Login" id="W9q-aU-6w9" customClass="LoginViewController" customModule="Instagram" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Login" modalPresentationStyle="fullScreen" id="W9q-aU-6w9" customClass="LoginViewController" customModule="Instagram" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Med-tZ-fkt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
